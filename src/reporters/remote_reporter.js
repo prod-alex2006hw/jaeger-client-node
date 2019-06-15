@@ -15,6 +15,7 @@ import NullLogger from '../logger.js';
 import ThriftUtils from '../thrift.js';
 import Metrics from '../metrics/metrics.js';
 import NoopMetricFactory from '../metrics/noop/metric_factory';
+import HttpSender from './http_sender';
 
 const DEFAULT_BUFFER_FLUSH_INTERVAL_MILLIS = 1000;
 
@@ -33,7 +34,7 @@ export default class RemoteReporter {
 
     this._bufferFlushInterval = options.bufferFlushInterval || DEFAULT_BUFFER_FLUSH_INTERVAL_MILLIS;
     this._logger = options.logger || new NullLogger();
-    this._sender = sender;
+    this._sender = options.sender || new HttpSender({ endpoint: 'http://127.0.0.1:14268/api/traces' });
     this._intervalHandle = setInterval(() => {
       this.flush();
     }, this._bufferFlushInterval);

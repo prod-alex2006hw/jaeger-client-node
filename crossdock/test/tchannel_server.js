@@ -17,7 +17,9 @@ import * as crossdock_constants from '../src/constants';
 import ConstSampler from '../../src/samplers/const_sampler.js';
 import DefaultContext from '../../src/default_context';
 import opentracing from 'opentracing';
-import InMemoryReporter from '../../src/reporters/in_memory_reporter.js';
+// import InMemoryReporter from '../../src/reporters/in_memory_reporter.js';
+import RemoteReporter from '../../src/reporters/remote_reporter.js';
+import HttpSender from '../../src/reporters/http_sender.js';
 import TChannelBridge from '../../src/tchannel_bridge';
 import TChannelServer from '../src/tchannel_server.js';
 import TChannelAsThrift from 'tchannel/as/thrift';
@@ -26,6 +28,7 @@ import Tracer from '../../src/tracer.js';
 import fs from 'fs';
 import path from 'path';
 import Utils from '../../src/util.js';
+import logger from './logger';
 
 process.env.NODE_ENV = 'test';
 
@@ -48,7 +51,20 @@ describe('crossdock tchannel server should', () => {
   );
 
   before(() => {
-    tracer = new Tracer('node', new InMemoryReporter(), new ConstSampler(false));
+    // const reporter = {
+    //   // Provide the traces endpoint; this forces the client to connect directly to the Collector and send
+    //   // spans over HTTP
+    //   collectorEndpoint: 'http://127.0.0.1:14268/api/traces',
+    //   // Provide username and password if authentication is enabled in the Collector
+    //   // username: '',
+    //   // password: '',
+    // }
+    const remoteReporterOptions = {
+      sender: new HttpSender({ endpoint: 'http://127.0.0.1:14268/api/traces' }),
+      logger: logger,
+    };
+    // tracer = new Tracer('node', new InMemoryReporter(), new ConstSampler(false));
+    tracer = new Tracer('node', new RemoteReporter(remoteReporterOptions), new ConstSampler(false));
     bridge = new TChannelBridge(tracer);
     server = new TChannelServer(crossdockSpecPath);
     ip = Utils.myIp();
