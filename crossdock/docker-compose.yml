@@ -11,16 +11,20 @@ services:
             - node
         environment:
             - WAIT_FOR=test_driver,go,java,python,node
+            # - WAIT_FOR=test_driver,go,python,node
             - WAIT_FOR_TIMEOUT=240s
 
             - CALL_TIMEOUT=60s
 
             - AXIS_CLIENT=go
             - AXIS_S1NAME=go,java,node
+            # - AXIS_S1NAME=go,node
             - AXIS_SAMPLED=true
             - AXIS_S2NAME=go,java,node
+            # - AXIS_S2NAME=go,node
             - AXIS_S2TRANSPORT=http
             - AXIS_S3NAME=go,java,node,python
+            # - AXIS_S3NAME=go,node,python
             - AXIS_S3TRANSPORT=http
 
             - BEHAVIOR_TRACE=client,s1name,sampled,s2name,s2transport,s3name,s3transport
@@ -54,8 +58,17 @@ services:
         ports:
             - "8080-8082"
         links:
-    #        Udp sender needs to know agent's address
+        #    Udp sender needs to know agent's address
             - jaeger-agent
+
+    jaeger-query:
+        image: jaegertracing/jaeger-query
+    
+    jaeger-collector:
+        image: jaegertracing/jaeger-collector
+
+    jaeger-agent:
+        image: jaegertracing/jaeger-agent
 
     test_driver:
         image: jaegertracing/test-driver

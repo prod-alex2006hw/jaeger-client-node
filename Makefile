@@ -20,8 +20,9 @@ publish: build-node
 	# Update Changelog.md to relfect the newest version changes.
 
 .PHONY: test
-test: build-node
-	make test-without-build
+test: test-without-build
+# test: build-node
+	# make test-without-build
 
 .PHONY: test-without-build
 test-without-build: install-test-deps
@@ -57,6 +58,6 @@ build-node: check-node-lts node-modules
 
 .PHONY: node-modules
 node-modules:
-	git submodule init -- ./src/jaeger-idl
-	git submodule update
+	# git submodule init -- ./src/jaeger-idl
+	# git submodule update
 	npm install

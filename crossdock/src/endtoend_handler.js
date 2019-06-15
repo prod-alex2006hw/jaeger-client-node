@@ -43,13 +43,13 @@ export default class EndToEndHandler {
       serviceName: 'crossdock-node',
       reporter: {
         flushIntervalMs: 1000,
-        agentHost: options.host || 'jaeger-agent',
+        agentHost: options.host || '127.0.0.1' || 'localhost',
         agentPort: options.port || 6832,
       },
       sampler: {
         type: constants.SAMPLER_TYPE_REMOTE,
         param: 1,
-        host: 'jaeger-agent',
+        host: options.host || '127.0.0.1' || 'localhost',
         port: 5778,
         refreshIntervalMs: 5000,
       },

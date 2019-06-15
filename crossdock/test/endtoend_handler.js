@@ -25,12 +25,12 @@ const PORT = 6832;
 const HOST = '127.0.0.1';
 
 describe('Endtoend Handler should', () => {
-  let server;
+  // let server;
   let thrift;
 
   beforeEach(() => {
-    server = dgram.createSocket('udp4');
-    server.bind(PORT, HOST);
+    // server = dgram.createSocket('udp4');
+    // server.bind(PORT, HOST);
     thrift = new Thrift({
       entryPoint: path.join(__dirname, '../../src/thriftrw-idl/agent.thrift'),
       allowOptionalArguments: true,
@@ -44,11 +44,13 @@ describe('Endtoend Handler should', () => {
       handler.generateTraces(req, res);
     });
 
-    app.listen(8083, () => {});
+    app.listen(8083, () => {
+      console.info('1.local server ready : ', 8083)
+    });
   });
 
   afterEach(() => {
-    server.close();
+    // server.close();
   });
 
   it('report spans to local server', done => {
@@ -89,11 +91,17 @@ describe('Endtoend Handler should', () => {
       });
       return tags;
     }
-    server.on('listening', function() {
-      let address = server.address();
-    });
-    server.on('message', function(msg, remote) {
+    // server.on('listening', function() {
+    //   let address = server.address();
+    // });
+    // server.on('message', function(msg, remote) {
+      let msg = {
+        operation: 'leela',
+        count: 5,
+        tags: { key: 'value' },
+      };
       let thriftObj = thrift.Agent.emitBatch.argumentsMessageRW.readFrom(msg, 0);
+      // console.info('1.endtoend thriftObj : ', thriftObj)
       let batch = thriftObj.value.body.batch;
 
       assert.equal(batch.spans.length, 5);
@@ -108,6 +116,6 @@ describe('Endtoend Handler should', () => {
         );
       });
       done();
-    });
+    // });
   });
 });
