@@ -13,13 +13,8 @@
     "type": "git",
     "url": "git://github.com/jaegertracing/jaeger-client-node.git"
   },
-  "files": [
-    "dist/src"
-  ],
-  "contributors": [
-    "Yuri Shkuro <ys@uber.com>",
-    "Won Jun Jang <wjang@uber.com>"
-  ],
+  "files": ["dist/src"],
+  "contributors": ["Yuri Shkuro <ys@uber.com>", "Won Jun Jang <wjang@uber.com>"],
   "devDependencies": {
     "babel-cli": "6.11.4",
     "babel-istanbul": "0.11.0",
@@ -63,7 +58,8 @@
     "format": "prettier --write '**/*.{js,json,md}' '!src/jaeger-idl/**'",
     "lint": "eslint $(ls src/ | grep '.js$') && echo '# linter passed' && npm run check-license",
     "precommit": "lint-staged",
-    "pretest": "docker run -d --name jaeger -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 -p 5775:5775/udp  -p 6831:6831/udp -p 6832:6832/udp -p 5778:5778 -p 8111:16686 -p 14268:14268 -p 9411:9411 jaegertracing/all-in-one:1.12; exit 0",
+    "pretest":
+      "docker run -d --name jaeger -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 -p 5775:5775/udp  -p 6831:6831/udp -p 6832:6832/udp -p 5778:5778 -p 8111:16686 -p 14268:14268 -p 9411:9411 jaegertracing/all-in-one:1.12; exit 0",
     "test": "make test",
     "test-dist": "mocha dist/test/ dist/test/baggage/ dist/test/throttler/ dist/test/samplers/ dist/test/metrics/",
     "test-all": "npm run test-core && npm run test-samplers && npm run test-crossdock && npm run test-baggage && npm run test-throttler && npm run test-prom-metrics",
@@ -76,14 +72,11 @@
     "show-cover": "open coverage/lcov-report/index.html"
   },
   "lint-staged": {
-    "*.{js,json,md}": [
-      "prettier --write",
-      "git add"
-    ]
+    "*.{js,json,md}": ["prettier --write", "git add"]
   },
   "dependencies": {
     "node-int64": "0.4.0",
-    "opentracing": "0.14.3",
+    "opentracing": "0.13.0",
     "tchannel": "3.9.13",
     "thriftrw": "3.11.3",
     "uuid": "3.3.2",
